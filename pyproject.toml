@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "phanpy-backend"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "phanpy_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.92.0"}
+"Mastodon.py" = "^1.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+dev = "phanpy_backend.main:start_dev"
+prod = "phanpy_backend.main:start_prod"
