@@ -1,2 +1,0 @@
-fastapi==0.92.0
-Mastodon.py==1.8.0
