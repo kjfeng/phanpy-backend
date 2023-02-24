@@ -36,6 +36,19 @@ def home_posts(access_token: str = Header(), instance_url: str = Header()):
     except MastodonNetworkError as err:
         raise HTTPException(status_code=500, detail=err.args)
 
+@app.get("/get_username")
+def get_username(access_token: str = Header(), instance_url: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+    try:   
+        return mastodon.me()
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
 
 def start_dev():
     """Starts uvicorn server with reload on code change enabled."""
