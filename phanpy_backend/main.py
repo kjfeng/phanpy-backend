@@ -52,14 +52,13 @@ app.add_middleware(
 #     except MastodonNetworkError as err:
 #         raise HTTPException(status_code=500, detail=err.args)
 
-@app.get("/home_posts/{access_token}+{instance_url}")
-def home_posts(access_token: str, instance_url: str, limit: int):
+@app.get("/timelines/home/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header()):
     mastodon = Mastodon(
         access_token=access_token,
         api_base_url=instance_url
     )
-    print(access_token)
-    print(instance_url)
+
     try:   
         return mastodon.timeline_home(limit=limit)
     except MastodonUnauthorizedError as err:
@@ -68,14 +67,89 @@ def home_posts(access_token: str, instance_url: str, limit: int):
         raise HTTPException(status_code=500, detail=err.args)
 
 
-@app.get("/get_username")
+@app.get("/timelines/public/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+
+    try:   
+        return mastodon.timeline_public(limit=limit)
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
+
+@app.get("/timelines/local/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+
+    try:   
+        return mastodon.timeline_local(limit=limit)
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
+
+@app.get("/timelines/hashtag/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header(), hashtag: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+
+    try:   
+        return mastodon.timeline_hastag(hashtag, limit=limit)
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
+
+@app.get("/timelines/list/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header(), list_id: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+
+    try:   
+        return mastodon.timeline_public(list_id, limit=limit)
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
+@app.get("/conversations/")
+def home_posts(limit: int, access_token: str = Header(), instance_url: str = Header()):
+    mastodon = Mastodon(
+        access_token=access_token,
+        api_base_url=instance_url
+    )
+
+    try:   
+        return mastodon.conversations(limit=limit)
+    except MastodonUnauthorizedError as err:
+        raise HTTPException(status_code=401, detail=err.args)
+    except MastodonNetworkError as err:
+        raise HTTPException(status_code=500, detail=err.args)
+
+
+@app.get("/get_username/")
 def get_username(access_token: str = Header(), instance_url: str = Header()):
     mastodon = Mastodon(
         access_token=access_token,
         api_base_url=instance_url
     )
+    
     try:   
-        return mastodon.me()
+        return instance_url
     except MastodonUnauthorizedError as err:
         raise HTTPException(status_code=401, detail=err.args)
     except MastodonNetworkError as err:
